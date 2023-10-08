@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "com.agava.mirrorserverapi": {
+      "version": "file:com.agava.mirrorserverapi",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.unity.collab-proxy": {
       "version": "2.0.4",
       "depth": 0,
