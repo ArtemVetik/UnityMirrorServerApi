@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Mirror/Examples/Tanks/Scenes/Menu.unity
+    path: Packages/com.agava.mirrorserverapi/Samples/TanksDemo/Scenes/Menu.unity
     guid: 432223786a2c67348adbc3c62030ca38
   - enabled: 1
-    path: Assets/Mirror/Examples/Tanks/Scenes/TanksServer.unity
+    path: Packages/com.agava.mirrorserverapi/Samples/TanksDemo/Scenes/TanksServer.unity
     guid: 83f9d2fb76f5742448c6e51f258327a2
   m_configObjects: {}

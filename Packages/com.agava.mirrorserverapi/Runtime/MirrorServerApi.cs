@@ -3,67 +3,59 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Agava.MirrorServerApi
 {
     public static class MirrorServerApi
     {
-        private static HttpClient _client;
         private static PortTransport _transport7777;
         private static PortTransport _transport7778;
-        private static string _apiIp;
-        private static ushort _apiPort;
+        private static string _requestBase;
 
         public static void Initialize(PortTransport transport7777, PortTransport transport7778, string apiIp, ushort apiPort)
         {
-            _client = new HttpClient();
             _transport7777 = transport7777;
             _transport7778 = transport7778;
-            _apiIp = apiIp;
-            _apiPort = apiPort;
+            _requestBase = $"http://{apiIp}:{apiPort}";
         }
 
         public static async Task<string> CreateServer()
         {
-            var response = await _client.PostAsync($"http://{_apiIp}:{_apiPort}/createserver", null);
-            var responseString = await response.Content.ReadAsStringAsync();
-            
-            try
-            {
-                response.EnsureSuccessStatusCode();
-            }
-            catch (HttpRequestException exception)
-            {
-                throw new HttpRequestException($"Response: {responseString}", exception);
-            }
-
-            return responseString;
+            return await Post($"{_requestBase}/createserver", new WWWForm());
         }
 
         public static async Task Connect(string joinCode, Action<Server> serverLoaded = null)
         {
-            var response = await _client.PostAsync($"http://{_apiIp}:{_apiPort}/connect/{joinCode}", null);
-            var responseString = await response.Content.ReadAsStringAsync();
+            var responseString = await Post($"{_requestBase}/connect/{joinCode}", new WWWForm());
 
-            try
-            {
-                response.EnsureSuccessStatusCode();
-            }
-            catch (HttpRequestException exception)
-            {
-                throw new HttpRequestException($"Response: {responseString}", exception);
-            }
-
-            var server =  JsonUtility.FromJson<Server>(responseString);
+            var server = JsonUtility.FromJson<Server>(responseString);
 
             _transport7777.Port = Convert.ToUInt16(server.port7777);
-            _transport7778.Port = Convert.ToUInt16(server.port7777);
+            _transport7778.Port = Convert.ToUInt16(server.port7778);
 
-            await Task.Delay(1000);
+            var delayTime = Time.realtimeSinceStartup + 1;
+
+            while (Time.realtimeSinceStartup < delayTime)
+                await Task.Yield();
 
             serverLoaded?.Invoke(server);
 
             NetworkManager.singleton.StartClient();
+        }
+
+        private static async Task<string> Post(string requestUri, WWWForm form)
+        {
+            using var request = UnityWebRequest.Post(requestUri, form);
+            var response = request.SendWebRequest();
+
+            while (response.isDone == false)
+                await Task.Yield();
+
+            if (request.error != null)
+                throw new HttpRequestException($"Request error: {request.error}");
+
+            return request.downloadHandler.text;
         }
     }
 }
