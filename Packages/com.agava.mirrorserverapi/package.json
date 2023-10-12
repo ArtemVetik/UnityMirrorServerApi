@@ -7,8 +7,15 @@
   "keywords": [
     "Mirror",
     "API",
-	"Networking",
-	"Server"
+    "Networking",
+    "Server"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "samples": [
+    {
+      "displayName": "Tanks Demo",
+      "description": "Contains sample tanks game.",
+      "path": "Samples~/TanksDemo"
+    }
+  ]
 }
