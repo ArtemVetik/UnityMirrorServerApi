@@ -1,7 +1,7 @@
 
 <br/>
 <p align="center">
-  <h3 align="center">Mirror Server Api</h3>
+  <h1 align="center">Mirror Server Api</h1>
 
   <p align="center">
     Unity Package. Provides API for creating and connecting to Mirror servers using JoinCode!
