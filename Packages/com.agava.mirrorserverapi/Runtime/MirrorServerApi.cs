@@ -13,10 +13,12 @@ namespace Agava.MirrorServerApi
         private static PortTransport _transport7778;
         private static string _requestBase;
 
+        public static bool Initialized => _requestBase != null;
+
         public static void Initialize(PortTransport transport7777, PortTransport transport7778, string apiIp, ushort apiPort)
         {
-            _transport7777 = transport7777;
-            _transport7778 = transport7778;
+            _transport7777 = transport7777 ?? throw new ArgumentNullException(nameof(transport7777));
+            _transport7778 = transport7778 ?? throw new ArgumentNullException(nameof(transport7778));
             _requestBase = $"http://{apiIp}:{apiPort}";
         }
 
